@@ -1,0 +1,68 @@
+﻿@page "/"
+@inject IJSRuntime JSRuntime
+
+<div @onkeypress="@InputTextKeyPress"
+     @onfocusout="@SetFocusToField"
+     tabindex="0"
+     @ref="@inputDiv">
+
+    <h1>Type the following text correctly</h1>
+    <br/>
+
+    <ColorText @ref="@colorTextRef" />
+
+</div>
+
+<br />
+<br />
+<h2>CPM: @cpm</h2>
+<h2>Correct Characters: @TextManager.numCorrect</h2>
+<h2>Incorrect characters: @TextManager.numInccorect</h2>
+<h2>Total Points: @TextManager.Points</h2>
+
+@code {
+    DateTime? startTime = null;
+    int cpm;
+
+    ColorText colorTextRef;
+
+    private void ReRenderText()
+    {
+        colorTextRef.ReRender();
+    }
+
+    private void InputTextKeyPress(KeyboardEventArgs args)
+    {
+        if (startTime is null)
+            startTime = DateTime.Now;
+
+        TextManager.SetInput(args);
+        colorTextRef.ReRender();
+
+        UpdateCPM();
+    }
+
+    private void UpdateCPM()
+    {
+        double correct = (double)TextManager.numCorrect;
+        double time = (DateTime.Now - startTime.Value).TotalSeconds;
+
+        cpm = (int)(correct / time * 60.0d);
+    }
+
+    // testing
+    protected ElementReference inputDiv;  // set by the @ref attribute
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("SetFocusToElement", inputDiv);
+        }
+    }
+
+    private async void SetFocusToField()
+    {
+        await JSRuntime.InvokeVoidAsync("SetFocusToElement", inputDiv);
+    }
+}

@@ -1,0 +1,23 @@
+﻿@code {
+    public void ReRender()
+    {
+        StateHasChanged();
+    }
+}
+
+<div style="display:inline-block; margin-left:-5px">
+
+    @foreach (var colorChar in TextManager.colorCharacters)
+    {
+        if (colorChar.c == ' ')
+        {
+            <span style="font-size:30px; font-family:Arial; background-color: @colorChar.GetSpaceColor()">&nbsp;</span>
+        }
+
+        else
+        {
+            <span style="font-size:30px; font-family:Arial; color: @colorChar.GetColor()">@colorChar.c</span>
+        }
+    }
+
+</div>

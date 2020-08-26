@@ -1,0 +1,34 @@
+﻿@page "/counter"
+
+<div
+     @onkeypress="@InputTextKeyPress"
+     tabindex="0">
+
+    <h1>Speed Typer</h1>
+
+    <p>@textToWrite</p>
+
+    <p>CPM: @cpm</p>
+    <p>@testInput</p>
+
+    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+</div>
+
+@code {
+
+    private string textToWrite = "<span style=\"color: red\">Finally, the weekend has arrived</span>";
+
+    private int cpm = 0;
+    private string testInput;
+
+    private void IncrementCount()
+    {
+        cpm++;
+    }
+
+    private void InputTextKeyPress(KeyboardEventArgs args)
+    {
+        testInput += args.Key;
+    }
+}
